@@ -1,17 +1,20 @@
 package server
 
 import (
-	"fmt"
-	"log"
-	"net/http"
+	"github.com/labstack/echo/v4"
+
+	"github.com/parikshith521/goshorty/internal/handlers"
 )
 
-func handler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Hello from the organized Go server! 🚀")
-}
+func Run(port string) {
+	e := echo.New()
+	// set up server routes here
+	e.GET("/", handlers.HealthCheck)
+	e.GET("/users", handlers.GetAllUsers)
+	e.GET("users/:id", handlers.GetUserById)
+	e.POST("users", handlers.AddUser)
+	e.PUT("users/:id", handlers.UpdateUserById)
+	e.DELETE("users/:id", handlers.DeleteUserById)
 
-func Run(addr string) {
-	http.HandleFunc("/", handler)
-	log.Printf("Server starting on http://localhost%s\n", addr)
-	log.Fatal(http.ListenAndServe(addr, nil))
+	e.Logger.Fatal(e.Start(port))
 }
