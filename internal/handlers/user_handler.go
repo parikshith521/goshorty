@@ -8,8 +8,8 @@ import (
 )
 
 type User struct {
-	id   int
-	name string
+	Id   int    `json:"id"`
+	Name string `json:"name"`
 }
 
 var nextId = 1
@@ -44,7 +44,7 @@ func AddUser(c echo.Context) error {
 	if err := c.Bind(user); err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid Request Payload"})
 	}
-	user.id = nextId
+	user.Id = nextId
 	users[nextId] = user
 	nextId++
 	return c.JSON(http.StatusCreated, user)
@@ -65,10 +65,10 @@ func UpdateUserById(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid Request Payload"})
 	}
 	//user contains id and new name
-	existingUser, found := users[user.id]
+	existingUser, found := users[user.Id]
 	if !found {
 		return c.JSON(http.StatusNotFound, map[string]string{"error": "User Not Found"})
 	}
-	existingUser.name = user.name
+	existingUser.Name = user.Name
 	return c.JSON(http.StatusOK, existingUser)
 }
